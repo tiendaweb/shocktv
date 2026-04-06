@@ -1,0 +1,41 @@
+# Ejemplo de configuración Nginx para ShockTV
+# Copiar a tu bloque server en /etc/nginx/sites-available/
+
+server {
+    listen 80;
+    server_name shocktv.local;
+
+    root /var/www/shocktv;
+    index index.php;
+
+    # Logs
+    access_log /var/log/nginx/shocktv_access.log;
+    error_log /var/log/nginx/shocktv_error.log;
+
+    # PHP-FPM
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+    }
+
+    # Archivos estáticos
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # URLs limpias
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # Proteger archivos sensibles
+    location ~ ^/(config|database|init-db\.php) {
+        deny all;
+    }
+
+    # Permitir acceso a admin y api
+    location ~ ^/(admin|api)/ {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+}
