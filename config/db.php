@@ -51,7 +51,7 @@ function initDatabase() {
 
     if ($stmt->fetchColumn() == 0) {
         $insert = $db->prepare('INSERT INTO admin_users (username, password_hash) VALUES (?, ?)');
-        $insert->execute(['admin', password_hash('admin123', PASSWORD_BCRYPT)]);
+        $insert->execute(['admin@shocktv.com', password_hash('admin@shocktv.com', PASSWORD_BCRYPT)]);
     }
 }
 

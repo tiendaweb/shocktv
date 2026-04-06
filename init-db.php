@@ -12,7 +12,7 @@ try {
     $db = getDB();
     echo "✅ Database connection successful\n";
     echo "✅ Tables created\n";
-    echo "✅ Default admin user created (admin / admin123)\n";
+    echo "✅ Default admin user created (admin@shocktv.com / admin@shocktv.com)\n";
     echo "✅ Default providers added\n\n";
 
     // Verificar
@@ -27,7 +27,7 @@ try {
     echo "📍 You can now access:\n";
     echo "   - Frontend: http://localhost/\n";
     echo "   - Admin: http://localhost/admin/\n";
-    echo "   - Default credentials: admin / admin123\n";
+    echo "   - Default credentials: admin@shocktv.com / admin@shocktv.com\n";
 
 } catch (Exception $e) {
     echo "❌ Error: " . $e->getMessage() . "\n";
