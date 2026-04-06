@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['admin_username'] = $username;
             $_SESSION['login_time'] = time();
-            header('Location: dashboard.php');
+            header('Location: /admin/dashboard');
             exit;
         } else {
             $error = 'Usuario o contraseña incorrectos';

@@ -89,18 +89,18 @@ $providers = $db->query('
                 <h1 class="text-2xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
             </div>
             <nav class="space-y-3">
-                <a href="dashboard.php" class="block px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-sm transition">
+                <a href="/admin/dashboard" class="block px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-sm transition">
                     <i class="fas fa-chart-line mr-3"></i> Dashboard
                 </a>
-                <a href="movies.php" class="block px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-sm transition">
+                <a href="/admin/movies" class="block px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-sm transition">
                     <i class="fas fa-film mr-3"></i> Películas/Series
                 </a>
-                <a href="providers.php" class="block px-4 py-3 bg-rose-600 text-white rounded-lg font-bold text-sm transition">
+                <a href="/admin/providers" class="block px-4 py-3 bg-rose-600 text-white rounded-lg font-bold text-sm transition">
                     <i class="fas fa-server mr-3"></i> Proveedores
                 </a>
             </nav>
             <hr class="border-white/10 my-8">
-            <a href="logout.php" class="w-full px-4 py-2 border border-white/20 text-gray-400 hover:text-white rounded-lg text-sm font-bold transition text-center block">
+            <a href="/admin/logout" class="w-full px-4 py-2 border border-white/20 text-gray-400 hover:text-white rounded-lg text-sm font-bold transition text-center block">
                 <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
             </a>
         </aside>
@@ -173,7 +173,7 @@ $providers = $db->query('
                                     <button type="submit" class="flex-1 bg-rose-600 hover:bg-rose-700 py-2 rounded font-bold transition">
                                         Guardar Cambios
                                     </button>
-                                    <a href="providers.php" class="flex-1 bg-gray-700 hover:bg-gray-600 py-2 rounded font-bold transition text-center">
+                                    <a href="/admin/providers" class="flex-1 bg-gray-700 hover:bg-gray-600 py-2 rounded font-bold transition text-center">
                                         Cancelar
                                     </a>
                                 </div>

@@ -2,23 +2,28 @@
     RewriteEngine On
     RewriteBase /
 
-    # Permitir archivos reales
+    # URLs limpias para admin: /admin/dashboard -> /admin/dashboard.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^/admin/ [NC]
+    RewriteRule ^admin/(.+)$ admin/$1.php [L,QSA]
+
+    # URLs limpias para API: /api/... -> /api/....php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^/api/ [NC]
+    RewriteRule ^api/(.+)$ api/$1.php [L,QSA]
+
+    # Frontend: Permitir archivos reales
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
-    # Redirigir a index.php
+    # Frontend: Redirigir a index.php
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>
 
-# Mejorar seguridad
+# Permitir todos los archivos PHP
 <FilesMatch "\.php$">
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
-</FilesMatch>
-
-# Permitir acceso a archivos específicos
-<FilesMatch "^(index|admin/|api/|public/).*\.php$">
     <IfModule mod_authz_core.c>
         Require all granted
     </IfModule>
