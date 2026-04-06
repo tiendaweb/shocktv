@@ -71,13 +71,13 @@ if (empty($trendingMovies)) {
 
     <aside id="sidebar" class="fixed top-0 left-0 h-full w-72 p-8 -translate-x-full lg:translate-x-0">
         <div class="mb-12">
-            <h1 class="text-3xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
-            <p id="deviceTxt" class="text-[9px] text-gray-600 font-bold tracking-widest mt-2 uppercase"></p>
+            <h1 class="text-2xl sm:text-3xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
+            <p id="deviceTxt" class="text-xs text-gray-600 font-bold tracking-widest mt-2 uppercase"></p>
         </div>
         <nav class="space-y-2">
-            <button onclick="loadSection('trending', this)" class="nav-btn active"><i class="fas fa-fire"></i> Tendencias</button>
-            <button onclick="loadSection('anime', this)" class="nav-btn"><i class="fas fa-dragon"></i> Anime Latino</button>
-            <button onclick="loadSection('series', this)" class="nav-btn"><i class="fas fa-tv"></i> Series VIP</button>
+            <button onclick="loadSection('trending', this)" class="nav-btn active text-sm sm:text-base"><i class="fas fa-fire"></i> Tendencias</button>
+            <button onclick="loadSection('anime', this)" class="nav-btn text-sm sm:text-base"><i class="fas fa-dragon"></i> Anime Latino</button>
+            <button onclick="loadSection('series', this)" class="nav-btn text-sm sm:text-base"><i class="fas fa-tv"></i> Series VIP</button>
         </nav>
         <hr class="border-white/20 my-8">
         <a href="/admin/" class="block px-4 py-2 text-xs font-bold text-gray-400 hover:text-rose-600 transition">
@@ -86,42 +86,42 @@ if (empty($trendingMovies)) {
     </aside>
 
     <main class="lg:ml-72 min-h-screen">
-        <header class="p-6 sticky top-0 bg-[#020205]/95 backdrop-blur-xl z-[500] flex items-center justify-between border-b border-white/5">
-            <button onclick="toggleMenu()" class="lg:hidden text-2xl text-rose-600"><i class="fas fa-bars"></i></button>
-            <div class="relative flex-1 max-w-xl mx-4">
-                <input id="searchInp" type="text" placeholder="Buscar con Zylalabs..." class="w-full bg-[#0a0a0f] border border-white/10 rounded-2xl py-3 px-12 outline-none focus:ring-2 focus:ring-rose-600">
-                <i class="fas fa-search absolute left-4 top-4 text-white/10"></i>
+        <header class="p-3 sm:p-6 sticky top-0 bg-[#020205]/95 backdrop-blur-xl z-[500] flex items-center justify-between border-b border-white/5">
+            <button onclick="toggleMenu()" class="lg:hidden text-xl sm:text-2xl text-rose-600"><i class="fas fa-bars"></i></button>
+            <div class="relative flex-1 max-w-xl mx-2 sm:mx-4">
+                <input id="searchInp" type="search" placeholder="Buscar..." class="w-full bg-[#0a0a0f] border border-white/10 rounded-2xl py-2 sm:py-3 px-10 sm:px-12 text-sm sm:text-base outline-none focus:ring-2 focus:ring-rose-600">
+                <i class="fas fa-search absolute left-3 sm:left-4 top-2 sm:top-4 text-white/10 text-sm"></i>
             </div>
         </header>
 
-        <section id="playerSec" class="hidden p-6 lg:p-10 animate-in fade-in">
+        <section id="playerSec" class="hidden p-3 sm:p-6 lg:p-10 animate-in fade-in">
             <div class="max-w-6xl mx-auto">
-                <button onclick="closePlayer()" class="mb-6 text-[10px] font-black text-gray-500 hover:text-white uppercase"><i class="fas fa-arrow-left mr-2"></i> Volver</button>
+                <button onclick="closePlayer()" class="mb-6 text-xs sm:text-sm font-black text-gray-500 hover:text-white uppercase"><i class="fas fa-arrow-left mr-2"></i> Volver</button>
 
                 <div class="video-wrapper mb-6">
                     <iframe id="mainPlayer" src="" allowfullscreen allow="autoplay"></iframe>
                 </div>
 
-                <div id="providerContainer" class="mb-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div id="providerContainer" class="mb-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
                     <!-- Providers loaded dynamically -->
                 </div>
 
-                <div class="grid lg:grid-cols-3 gap-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-12">
                     <div class="lg:col-span-2">
-                        <h2 id="mTitle" class="text-4xl lg:text-5xl font-black italic uppercase text-rose-600 mb-4"></h2>
-                        <p id="mDesc" class="text-gray-400 text-sm leading-relaxed mb-6"></p>
+                        <h2 id="mTitle" class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black italic uppercase text-rose-600 mb-4"></h2>
+                        <p id="mDesc" class="text-gray-400 text-xs sm:text-sm leading-relaxed mb-6"></p>
                     </div>
                     <div id="epContainer" class="hidden">
-                        <h3 class="text-xs font-black mb-6 uppercase text-gray-500 tracking-widest italic">Episodios Temporada 1</h3>
-                        <div id="epList" class="space-y-2 max-h-[400px] overflow-y-auto pr-2"></div>
+                        <h3 class="text-xs font-black mb-6 uppercase text-gray-500 tracking-widest italic">Episodios Temp. 1</h3>
+                        <div id="epList" class="space-y-2 max-h-[250px] sm:max-h-[400px] overflow-y-auto pr-2"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="gridSec" class="p-6 lg:p-10">
-            <h2 id="sectionTitle" class="text-2xl font-black italic mb-10 border-l-4 border-rose-600 pl-4 uppercase">Recomendados</h2>
-            <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8"></div>
+        <section id="gridSec" class="p-3 sm:p-6 lg:p-10">
+            <h2 id="sectionTitle" class="text-lg sm:text-xl md:text-2xl font-black italic mb-6 sm:mb-10 border-l-4 border-rose-600 pl-4 uppercase">Recomendados</h2>
+            <div id="grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6 lg:gap-8"></div>
         </section>
     </main>
 
@@ -306,6 +306,39 @@ if (empty($trendingMovies)) {
                     .catch(e => console.error('Search error:', e));
             }, 500);
         });
+
+        // GESTOS TÁCTILES - Swipe para abrir/cerrar menú
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const threshold = 50;
+            const sidebarEl = document.getElementById('sidebar');
+            const overlayEl = document.getElementById('overlay');
+
+            // Swipe izquierda: cerrar menú
+            if (touchStartX - touchEndX > threshold) {
+                if (overlayEl.classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+
+            // Swipe derecha: abrir menú (solo en móvil)
+            if (touchEndX - touchStartX > threshold) {
+                if (window.innerWidth < 1024 && !overlayEl.classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+        }
 
         // Inicializar
         detectDevice();

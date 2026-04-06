@@ -84,7 +84,8 @@ $providers = $db->query('
 <body>
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside class="w-72 bg-[#07070a] border-r border-white/10 p-8 sticky top-0 h-screen overflow-y-auto">
+        <aside id="adminSidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-[#07070a] border-r border-white/10 p-4 sm:p-8 overflow-y-auto
+            -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
             <div class="mb-12">
                 <h1 class="text-2xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
             </div>
@@ -107,13 +108,19 @@ $providers = $db->query('
 
         <!-- Main -->
         <main class="flex-1 overflow-auto">
-            <header class="bg-[#0a0a0f]/50 backdrop-blur border-b border-white/10 px-8 py-6 sticky top-0 z-10 flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-black italic uppercase">Proveedores de Streaming</h2>
-                    <p class="text-xs text-gray-500 mt-1">Gestiona los servidores de reproducción</p>
+            <header class="bg-[#0a0a0f]/50 backdrop-blur border-b border-white/10 px-4 sm:px-8 py-4 sm:py-6 sticky top-0 z-10 flex justify-between items-center gap-4">
+                <div class="min-w-0">
+                    <h2 class="text-lg sm:text-2xl font-black italic uppercase truncate">Proveedores</h2>
+                    <p class="text-xs text-gray-500 mt-1">Servidores de reproducción</p>
                 </div>
-                <button onclick="openProviderModal()" class="px-6 py-3 bg-rose-600 hover:bg-rose-700 rounded-lg font-bold transition flex items-center gap-2">
-                    <i class="fas fa-plus"></i> Nuevo Proveedor
+                <button id="adminSidebarToggle" class="lg:hidden text-rose-600 text-xl p-2 flex-shrink-0">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button onclick="openProviderModal()" class="hidden sm:flex px-3 sm:px-6 py-2 sm:py-3 bg-rose-600 hover:bg-rose-700 rounded-lg font-bold transition items-center gap-2 text-sm flex-shrink-0">
+                    <i class="fas fa-plus"></i><span class="hidden md:inline">Nuevo</span>
+                </button>
+                <button onclick="openProviderModal()" class="sm:hidden px-3 py-2 bg-rose-600 hover:bg-rose-700 rounded-lg font-bold transition text-sm flex-shrink-0">
+                    <i class="fas fa-plus"></i>
                 </button>
             </header>
 
@@ -133,7 +140,7 @@ $providers = $db->query('
                 <!-- Edit Modal -->
                 <?php if ($editProvider): ?>
                     <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-8 max-w-lg w-full">
+                        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-4 sm:p-8 max-w-lg w-full max-h-[95vh] overflow-y-auto">
                             <h3 class="text-2xl font-black mb-6">Editar Proveedor</h3>
                             <form method="POST" class="space-y-4">
                                 <input type="hidden" name="provider_id" value="<?php echo $editProvider['id']; ?>">
@@ -184,21 +191,21 @@ $providers = $db->query('
 
                 <!-- Providers List -->
                 <?php if (!empty($providers)): ?>
-                    <div class="grid gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <?php foreach ($providers as $provider): ?>
-                            <div class="bg-[#0a0a0f] border border-white/10 p-6 rounded-lg hover:border-rose-600 transition group">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-3 mb-2">
-                                            <h3 class="font-bold text-lg"><?php echo htmlspecialchars($provider['name']); ?></h3>
-                                            <span class="text-xs px-2 py-1 bg-<?php echo $provider['active'] ? 'green-900/50 border-green-600 text-green-300' : 'gray-700 text-gray-400'; ?> border rounded">
-                                                <?php echo $provider['active'] ? 'Activo' : 'Inactivo'; ?>
+                            <div class="bg-[#0a0a0f] border border-white/10 p-4 sm:p-6 rounded-lg hover:border-rose-600 transition group">
+                                <div class="flex items-start justify-between mb-4 gap-3">
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 mb-2 flex-wrap">
+                                            <h3 class="font-bold text-sm sm:text-lg truncate"><?php echo htmlspecialchars($provider['name']); ?></h3>
+                                            <span class="text-xs px-2 py-1 bg-<?php echo $provider['active'] ? 'green-900/50 border-green-600 text-green-300' : 'gray-700 text-gray-400'; ?> border rounded flex-shrink-0">
+                                                <?php echo $provider['active'] ? 'Act.' : 'Inact.'; ?>
                                             </span>
                                         </div>
-                                        <p class="text-xs text-gray-500 font-mono break-all"><?php echo htmlspecialchars($provider['embed_pattern']); ?></p>
+                                        <p class="text-xs text-gray-500 font-mono break-all"><?php echo htmlspecialchars(substr($provider['embed_pattern'], 0, 50)); ?>...</p>
                                         <p class="text-xs text-gray-600 mt-2">
-                                            <i class="fas fa-language mr-1"></i> Idioma: <?php echo htmlspecialchars($provider['language_param']); ?> •
-                                            <i class="fas fa-layer-group mr-1"></i> Prioridad: <?php echo $provider['priority']; ?>
+                                            <i class="fas fa-language mr-1"></i><?php echo htmlspecialchars($provider['language_param']); ?> •
+                                            <i class="fas fa-layer-group mr-1"></i><?php echo $provider['priority']; ?>
                                         </p>
                                     </div>
                                 </div>
@@ -226,7 +233,7 @@ $providers = $db->query('
 
     <!-- Provider Modal -->
     <div id="providerModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-8 max-w-lg w-full">
+        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-4 sm:p-8 max-w-lg w-full max-h-[95vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-black">Nuevo Proveedor</h3>
                 <button onclick="closeProviderModal()" class="text-2xl text-gray-500 hover:text-white">×</button>
@@ -286,6 +293,20 @@ $providers = $db->query('
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeProviderModal();
+        });
+
+        // Sidebar toggle para móvil
+        document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
+            document.getElementById('adminSidebar').classList.toggle('-translate-x-full');
+        });
+
+        // Cerrar sidebar al hacer click en un link
+        document.querySelectorAll('#adminSidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    document.getElementById('adminSidebar').classList.add('-translate-x-full');
+                }
+            });
         });
     </script>
 </body>

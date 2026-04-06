@@ -104,7 +104,8 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside class="w-72 bg-[#07070a] border-r border-white/10 p-8 sticky top-0 h-screen overflow-y-auto">
+        <aside id="adminSidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-[#07070a] border-r border-white/10 p-4 sm:p-8 overflow-y-auto
+            -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
             <div class="mb-12">
                 <h1 class="text-2xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
             </div>
@@ -127,13 +128,19 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Main -->
         <main class="flex-1 overflow-auto">
-            <header class="bg-[#0a0a0f]/50 backdrop-blur border-b border-white/10 px-8 py-6 sticky top-0 z-10 flex justify-between items-center">
-                <div>
-                    <h2 class="text-2xl font-black italic uppercase">Películas/Series</h2>
+            <header class="bg-[#0a0a0f]/50 backdrop-blur border-b border-white/10 px-4 sm:px-8 py-4 sm:py-6 sticky top-0 z-10 flex justify-between items-center gap-4">
+                <div class="min-w-0">
+                    <h2 class="text-lg sm:text-2xl font-black italic uppercase truncate">Películas/Series</h2>
                     <p class="text-xs text-gray-500 mt-1">Gestiona tu catálogo</p>
                 </div>
-                <button onclick="openSearchModal()" class="px-6 py-3 bg-rose-600 hover:bg-rose-700 rounded-lg font-bold transition flex items-center gap-2">
-                    <i class="fas fa-plus"></i> Agregar desde TMDB
+                <button id="adminSidebarToggle" class="lg:hidden text-rose-600 text-xl p-2 flex-shrink-0">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button onclick="openSearchModal()" class="hidden sm:flex px-3 sm:px-6 py-2 sm:py-3 bg-rose-600 hover:bg-rose-700 rounded-lg font-bold transition items-center gap-2 text-sm flex-shrink-0">
+                    <i class="fas fa-plus"></i><span class="hidden md:inline">Agregar</span>
+                </button>
+                <button onclick="openSearchModal()" class="sm:hidden px-3 py-2 bg-rose-600 hover:bg-rose-700 rounded-lg font-bold transition text-sm flex-shrink-0">
+                    <i class="fas fa-plus"></i>
                 </button>
             </header>
 
@@ -153,7 +160,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Edit Modal -->
                 <?php if ($editMovie): ?>
                     <div class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-8 max-w-lg w-full">
+                        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-4 sm:p-8 max-w-lg w-full max-h-[95vh] overflow-y-auto">
                             <h3 class="text-2xl font-black mb-6">Editar Película</h3>
                             <form method="POST" class="space-y-4">
                                 <input type="hidden" name="action" value="update">
@@ -195,30 +202,31 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- Movies List -->
                 <?php if (!empty($movies)): ?>
-                    <div class="space-y-3">
+                    <div class="space-y-2 sm:space-y-3">
                         <?php foreach ($movies as $movie): ?>
-                            <div class="flex items-center gap-4 bg-[#0a0a0f] border border-white/10 p-4 rounded-lg hover:border-rose-600 transition group">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-[#0a0a0f] border border-white/10 p-3 sm:p-4 rounded-lg hover:border-rose-600 transition group">
                                 <?php if ($movie['poster_path']): ?>
                                     <img src="<?php echo TMDB_IMAGE_BASE . htmlspecialchars($movie['poster_path']); ?>"
                                          alt="<?php echo htmlspecialchars($movie['title']); ?>"
-                                         class="w-12 h-16 rounded object-cover">
+                                         class="w-12 h-16 rounded object-cover flex-shrink-0">
                                 <?php else: ?>
-                                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center">
-                                        <i class="fas fa-image text-gray-600"></i>
+                                    <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center flex-shrink-0">
+                                        <i class="fas fa-image text-gray-600 text-xs"></i>
                                     </div>
                                 <?php endif; ?>
                                 <div class="flex-1 min-w-0">
-                                    <p class="font-bold truncate"><?php echo htmlspecialchars($movie['title']); ?></p>
+                                    <p class="font-bold text-sm sm:text-base truncate"><?php echo htmlspecialchars($movie['title']); ?></p>
                                     <p class="text-xs text-gray-500">
                                         <i class="fas fa-<?php echo $movie['media_type'] === 'tv' ? 'tv' : 'film'; ?> mr-1"></i>
-                                        <?php echo ucfirst($movie['media_type']); ?> • TMDB: <?php echo $movie['tmdb_id']; ?> • Sección: <?php echo ucfirst($movie['section']); ?>
+                                        <?php echo ucfirst($movie['media_type']); ?> • TMDB: <?php echo $movie['tmdb_id']; ?>
+                                        <span class="hidden md:inline">• <?php echo ucfirst($movie['section']); ?></span>
                                     </p>
                                 </div>
-                                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                                <div class="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex-shrink-0">
                                     <a href="?edit=<?php echo $movie['id']; ?>" class="p-2 hover:bg-blue-600 rounded transition text-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="?delete=<?php echo $movie['id']; ?>" onclick="return confirm('¿Eliminar esta película?')"
+                                    <a href="?delete=<?php echo $movie['id']; ?>" onclick="return confirm('¿Eliminar?')"
                                        class="p-2 hover:bg-red-600 rounded transition text-sm">
                                         <i class="fas fa-trash"></i>
                                     </a>
@@ -252,7 +260,7 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Search Modal -->
     <div id="searchModal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-8 max-w-2xl w-full max-h-96 overflow-y-auto">
+        <div class="bg-[#0a0a0f] rounded-xl border border-white/10 p-4 sm:p-8 max-w-lg sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-black">Buscar en TMDB</h3>
                 <button onclick="closeSearchModal()" class="text-2xl text-gray-500 hover:text-white">×</button>
@@ -339,6 +347,20 @@ $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // Close modal on Escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeSearchModal();
+        });
+
+        // Sidebar toggle para móvil
+        document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
+            document.getElementById('adminSidebar').classList.toggle('-translate-x-full');
+        });
+
+        // Cerrar sidebar al hacer click en un link
+        document.querySelectorAll('#adminSidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    document.getElementById('adminSidebar').classList.add('-translate-x-full');
+                }
+            });
         });
     </script>
 </body>

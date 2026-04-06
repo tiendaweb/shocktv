@@ -38,107 +38,113 @@ $recentMovies = $db->query('
 <body>
     <div class="min-h-screen flex">
         <!-- Sidebar -->
-        <aside class="w-72 bg-[#07070a] border-r border-white/10 p-8 sticky top-0 h-screen overflow-y-auto">
+        <aside id="adminSidebar" class="fixed lg:sticky top-0 left-0 h-screen w-72 bg-[#07070a] border-r border-white/10 p-4 sm:p-8 overflow-y-auto
+            -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
             <div class="mb-12">
                 <h1 class="text-2xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
                 <p class="text-xs text-gray-600 font-bold mt-2">Admin Panel v2.0</p>
             </div>
 
-            <nav class="space-y-3">
-                <a href="dashboard.php" class="block px-4 py-3 bg-rose-600 text-white rounded-lg font-bold text-sm hover:bg-rose-700 transition">
-                    <i class="fas fa-chart-line mr-3"></i> Dashboard
+            <nav class="space-y-2 sm:space-y-3">
+                <a href="dashboard.php" class="block px-3 sm:px-4 py-2 sm:py-3 bg-rose-600 text-white rounded-lg font-bold text-xs sm:text-sm hover:bg-rose-700 transition">
+                    <i class="fas fa-chart-line mr-2 sm:mr-3"></i><span class="hidden sm:inline">Dashboard</span><span class="sm:hidden">Panel</span>
                 </a>
-                <a href="movies.php" class="block px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-sm transition">
-                    <i class="fas fa-film mr-3"></i> Películas/Series
+                <a href="movies.php" class="block px-3 sm:px-4 py-2 sm:py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-xs sm:text-sm transition">
+                    <i class="fas fa-film mr-2 sm:mr-3"></i><span class="hidden sm:inline">Películas/Series</span><span class="sm:hidden">Películas</span>
                 </a>
-                <a href="providers.php" class="block px-4 py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-sm transition">
-                    <i class="fas fa-server mr-3"></i> Proveedores
+                <a href="providers.php" class="block px-3 sm:px-4 py-2 sm:py-3 text-gray-400 hover:bg-white/5 rounded-lg font-bold text-xs sm:text-sm transition">
+                    <i class="fas fa-server mr-2 sm:mr-3"></i><span class="hidden sm:inline">Proveedores</span><span class="sm:hidden">Servidores</span>
                 </a>
             </nav>
 
-            <hr class="border-white/10 my-8">
+            <hr class="border-white/10 my-6 sm:my-8">
 
-            <div class="text-xs text-gray-500 mb-6">
-                <p class="font-bold mb-2">Admin logueado:</p>
-                <p class="bg-white/5 px-3 py-2 rounded"><?php echo htmlspecialchars(getAdminUsername()); ?></p>
+            <div class="text-xs text-gray-500 mb-4 sm:mb-6">
+                <p class="font-bold mb-2">Admin:</p>
+                <p class="bg-white/5 px-2 sm:px-3 py-1 sm:py-2 rounded text-xs truncate"><?php echo htmlspecialchars(getAdminUsername()); ?></p>
             </div>
 
-            <a href="logout.php" class="w-full px-4 py-2 border border-white/20 text-gray-400 hover:text-white rounded-lg text-sm font-bold transition text-center">
-                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+            <a href="logout.php" class="w-full px-3 sm:px-4 py-2 sm:py-3 border border-white/20 text-gray-400 hover:text-white rounded-lg text-xs sm:text-sm font-bold transition text-center">
+                <i class="fas fa-sign-out-alt mr-1 sm:mr-2"></i><span class="hidden sm:inline">Cerrar Sesión</span><span class="sm:hidden">Salir</span>
             </a>
         </aside>
 
         <!-- Main Content -->
         <main class="flex-1 overflow-auto">
-            <header class="bg-[#0a0a0f]/50 backdrop-blur border-b border-white/10 px-8 py-6 sticky top-0 z-10">
-                <h2 class="text-2xl font-black italic uppercase">Dashboard</h2>
-                <p class="text-xs text-gray-500 mt-1">Panel de control de ShockTV</p>
+            <header class="bg-[#0a0a0f]/50 backdrop-blur border-b border-white/10 px-4 sm:px-8 py-4 sm:py-6 sticky top-0 z-10 flex items-center justify-between">
+                <div class="min-w-0">
+                    <h2 class="text-lg sm:text-2xl font-black italic uppercase">Dashboard</h2>
+                    <p class="text-xs text-gray-500 mt-1">Panel de ShockTV</p>
+                </div>
+                <button id="adminSidebarToggle" class="lg:hidden text-rose-600 text-xl p-2">
+                    <i class="fas fa-bars"></i>
+                </button>
             </header>
 
-            <section class="p-8">
+            <section class="p-4 sm:p-8">
                 <!-- Estadísticas -->
-                <div class="grid grid-cols-3 gap-6 mb-12">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
                     <div class="stat-card accent">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-400 text-sm uppercase font-bold">Películas</p>
-                                <p class="text-3xl font-black mt-2"><?php echo $statsMovies['count']; ?></p>
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="min-w-0">
+                                <p class="text-gray-400 text-xs sm:text-sm uppercase font-bold">Películas</p>
+                                <p class="text-2xl sm:text-3xl font-black mt-1 sm:mt-2"><?php echo $statsMovies['count']; ?></p>
                             </div>
-                            <i class="fas fa-film text-rose-600 text-3xl opacity-30"></i>
+                            <i class="fas fa-film text-rose-600 text-2xl sm:text-3xl opacity-30 flex-shrink-0"></i>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-400 text-sm uppercase font-bold">Series</p>
-                                <p class="text-3xl font-black mt-2"><?php echo $statsTV['count']; ?></p>
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="min-w-0">
+                                <p class="text-gray-400 text-xs sm:text-sm uppercase font-bold">Series</p>
+                                <p class="text-2xl sm:text-3xl font-black mt-1 sm:mt-2"><?php echo $statsTV['count']; ?></p>
                             </div>
-                            <i class="fas fa-tv text-blue-400 text-3xl opacity-30"></i>
+                            <i class="fas fa-tv text-blue-400 text-2xl sm:text-3xl opacity-30 flex-shrink-0"></i>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-400 text-sm uppercase font-bold">Proveedores Activos</p>
-                                <p class="text-3xl font-black mt-2"><?php echo $statsProviders['count']; ?></p>
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="min-w-0">
+                                <p class="text-gray-400 text-xs sm:text-sm uppercase font-bold">Proveedores</p>
+                                <p class="text-2xl sm:text-3xl font-black mt-1 sm:mt-2"><?php echo $statsProviders['count']; ?></p>
                             </div>
-                            <i class="fas fa-server text-green-400 text-3xl opacity-30"></i>
+                            <i class="fas fa-server text-green-400 text-2xl sm:text-3xl opacity-30 flex-shrink-0"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Películas Recientes -->
-                <div class="mb-12">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-black italic uppercase">Agregados Recientemente</h3>
-                        <a href="movies.php" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 rounded-lg text-sm font-bold transition">
+                <div class="mb-8 sm:mb-12">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
+                        <h3 class="text-lg sm:text-xl font-black italic uppercase">Agregados Recientemente</h3>
+                        <a href="movies.php" class="w-full sm:w-auto px-4 py-2 bg-rose-600 hover:bg-rose-700 rounded-lg text-sm font-bold transition text-center">
                             Ver todos <i class="fas fa-arrow-right ml-2"></i>
                         </a>
                     </div>
 
                     <?php if (!empty($recentMovies)): ?>
-                        <div class="space-y-3">
+                        <div class="space-y-2 sm:space-y-3">
                             <?php foreach ($recentMovies as $movie): ?>
-                                <div class="flex items-center gap-4 bg-[#0a0a0f] border border-white/10 p-4 rounded-lg hover:border-rose-600 transition group">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 bg-[#0a0a0f] border border-white/10 p-3 sm:p-4 rounded-lg hover:border-rose-600 transition group">
                                     <?php if ($movie['poster_path']): ?>
                                         <img src="<?php echo TMDB_IMAGE_BASE . htmlspecialchars($movie['poster_path']); ?>"
                                              alt="<?php echo htmlspecialchars($movie['title']); ?>"
-                                             class="w-12 h-16 rounded object-cover">
+                                             class="w-12 h-16 rounded object-cover flex-shrink-0">
                                     <?php else: ?>
-                                        <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center">
-                                            <i class="fas fa-image text-gray-600"></i>
+                                        <div class="w-12 h-16 bg-gray-700 rounded flex items-center justify-center flex-shrink-0">
+                                            <i class="fas fa-image text-gray-600 text-xs"></i>
                                         </div>
                                     <?php endif; ?>
                                     <div class="flex-1 min-w-0">
-                                        <p class="font-bold truncate"><?php echo htmlspecialchars($movie['title']); ?></p>
+                                        <p class="font-bold text-sm sm:text-base truncate"><?php echo htmlspecialchars($movie['title']); ?></p>
                                         <p class="text-xs text-gray-500">
                                             <i class="fas fa-<?php echo $movie['media_type'] === 'tv' ? 'tv' : 'film'; ?> mr-1"></i>
-                                            <?php echo ucfirst($movie['media_type']); ?> • TMDB ID: <?php echo $movie['tmdb_id']; ?>
+                                            <?php echo ucfirst($movie['media_type']); ?> • TMDB: <?php echo $movie['tmdb_id']; ?>
                                         </p>
                                     </div>
-                                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                                    <div class="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex-shrink-0">
                                         <a href="movies.php?edit=<?php echo $movie['id']; ?>" class="p-2 hover:bg-rose-600 rounded transition text-xs">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -147,9 +153,9 @@ $recentMovies = $db->query('
                             <?php endforeach; ?>
                         </div>
                     <?php else: ?>
-                        <div class="bg-[#0a0a0f] border border-white/10 rounded-lg p-8 text-center">
-                            <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>
-                            <p class="text-gray-400">Sin películas agregadas aún</p>
+                        <div class="bg-[#0a0a0f] border border-white/10 rounded-lg p-6 sm:p-8 text-center">
+                            <i class="fas fa-inbox text-3xl sm:text-4xl text-gray-600 mb-4"></i>
+                            <p class="text-gray-400 text-sm sm:text-base">Sin películas agregadas aún</p>
                             <a href="movies.php" class="inline-block mt-4 px-4 py-2 bg-rose-600 hover:bg-rose-700 rounded-lg text-sm font-bold transition">
                                 Agregar película
                             </a>
@@ -159,5 +165,21 @@ $recentMovies = $db->query('
             </section>
         </main>
     </div>
+
+    <script>
+        // Sidebar toggle para móvil
+        document.getElementById('adminSidebarToggle')?.addEventListener('click', () => {
+            document.getElementById('adminSidebar').classList.toggle('-translate-x-full');
+        });
+
+        // Cerrar sidebar al hacer click en un link
+        document.querySelectorAll('#adminSidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    document.getElementById('adminSidebar').classList.add('-translate-x-full');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
