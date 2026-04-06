@@ -7,7 +7,7 @@ require_once __DIR__ . '/../config/constants.php';
 
 function requireAdmin() {
     if (!isset($_SESSION['admin_id'])) {
-        header('Location: /admin/index.php');
+        header('Location: /admin/index');
         exit;
     }
 
@@ -15,7 +15,7 @@ function requireAdmin() {
     if (isset($_SESSION['login_time'])) {
         if (time() - $_SESSION['login_time'] > SESSION_TIMEOUT) {
             session_destroy();
-            header('Location: /admin/index.php?timeout=1');
+            header('Location: /admin/index?timeout=1');
             exit;
         }
         // Refresh session timeout

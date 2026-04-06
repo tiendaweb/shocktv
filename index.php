@@ -147,7 +147,7 @@ if (empty($trendingMovies)) {
         // Cargar proveedores al inicializar
         async function loadProviders() {
             try {
-                const res = await fetch('/api/getProviders.php');
+                const res = await fetch('/api/getProviders');
                 const data = await res.json();
                 providers = data.providers || [];
                 console.log('Proveedores cargados:', providers);
@@ -165,7 +165,7 @@ if (empty($trendingMovies)) {
 
             // Cargar películas desde la API interna
             try {
-                const res = await fetch('/api/getMovies.php?section=' + type);
+                const res = await fetch('/api/getMovies?section=' + type);
                 const data = await res.json();
                 const movies = data.results || [];
 
@@ -295,7 +295,7 @@ if (empty($trendingMovies)) {
             }
 
             searchTimeout = setTimeout(() => {
-                fetch('/api/search.php?q=' + encodeURIComponent(query))
+                fetch('/api/search?q=' + encodeURIComponent(query))
                     .then(r => r.json())
                     .then(data => {
                         const results = data.results || [];

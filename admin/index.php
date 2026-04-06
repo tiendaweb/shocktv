@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['admin_username'] = $username;
             $_SESSION['login_time'] = time();
-            header('Location: dashboard.php');
+            header('Location: /admin/dashboard');
             exit;
         } else {
             $error = 'Usuario o contraseña incorrectos';
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <p class="text-center text-gray-500 text-xs mt-8">
-            Por defecto: admin / admin123
+            Por defecto: admin@shocktv.com / admin@shocktv.com
         </p>
     </div>
 </body>
