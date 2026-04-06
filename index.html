@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShockTV | Zylalabs Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap');
+        
+        :root { --accent: #e11d48; }
+        body { background: #020205; color: white; font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+        
+        /* DETECTOR DE DISPOSITIVOS */
+        .device-tv { zoom: 1.4; font-weight: 700; }
+        .device-mobile { font-size: 14px; }
+
+        /* MENÚ FLOTANTE PROFESIONAL */
+        #sidebar { z-index: 10000; background: #07070a; border-right: 1px solid #1a1a20; transition: transform 0.4s ease; }
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; backdrop-filter: blur(8px); }
+        #overlay.active { display: block; }
+
+        .nav-btn { width: 100%; display: flex; align-items: center; gap: 15px; padding: 16px; border-radius: 15px; color: #666; transition: 0.3s; }
+        .nav-btn.active, .nav-btn:hover { background: var(--accent); color: white; box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3); }
+
+        /* REPRODUCTOR */
+        .video-wrapper { position: relative; padding-bottom: 56.25%; background: #000; border-radius: 25px; overflow: hidden; border: 2px solid #1a1a1f; box-shadow: 0 0 40px rgba(225, 29, 72, 0.1); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* SERVIDORES LATINOS */
+        .srv-tag { background: #111; border: 1px solid #222; padding: 12px; border-radius: 12px; cursor: pointer; text-align: center; font-size: 11px; font-weight: 800; transition: 0.2s; }
+        .srv-tag:hover { border-color: var(--accent); color: var(--accent); }
+        .srv-tag.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* EPISODIOS */
+        .ep-card { background: #0a0a0f; border: 1px solid #1a1a20; padding: 12px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .ep-card:hover { border-color: var(--accent); transform: translateX(5px); }
+        .ep-card img { width: 90px; height: 50px; border-radius: 8px; object-fit: cover; }
+    </style>
+</head>
+<body class="device-pc">
+
+    <div id="overlay" onclick="toggleMenu()"></div>
+
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-72 p-8 -translate-x-full lg:translate-x-0">
+        <div class="mb-12">
+            <h1 class="text-3xl font-black text-rose-600 italic uppercase">SHOCK<span class="text-white">TV</span></h1>
+            <p id="deviceTxt" class="text-[9px] text-gray-600 font-bold tracking-widest mt-2 uppercase"></p>
+        </div>
+        <nav class="space-y-2">
+            <button onclick="loadSection('trending', this)" class="nav-btn active"><i class="fas fa-fire"></i> Tendencias</button>
+            <button onclick="loadSection('anime', this)" class="nav-btn"><i class="fas fa-dragon"></i> Anime Latino</button>
+            <button onclick="loadSection('series', this)" class="nav-btn"><i class="fas fa-tv"></i> Series VIP</button>
+        </nav>
+    </aside>
+
+    <main class="lg:ml-72 min-h-screen">
+        <header class="p-6 sticky top-0 bg-[#020205]/95 backdrop-blur-xl z-[500] flex items-center justify-between border-b border-white/5">
+            <button onclick="toggleMenu()" class="lg:hidden text-2xl text-rose-600"><i class="fas fa-bars"></i></button>
+            <div class="relative flex-1 max-w-xl mx-4">
+                <input id="searchInp" type="text" placeholder="Buscar con Zylalabs..." class="w-full bg-[#0a0a0f] border border-white/10 rounded-2xl py-3 px-12 outline-none focus:ring-2 focus:ring-rose-600">
+                <i class="fas fa-search absolute left-4 top-4 text-white/10"></i>
+            </div>
+        </header>
+
+        <section id="playerSec" class="hidden p-6 lg:p-10 animate-in fade-in">
+            <div class="max-w-6xl mx-auto">
+                <button onclick="closePlayer()" class="mb-6 text-[10px] font-black text-gray-500 hover:text-white uppercase"><i class="fas fa-arrow-left mr-2"></i> Volver</button>
+                
+                <div class="video-wrapper mb-6">
+                    <iframe id="mainPlayer" src="" allowfullscreen allow="autoplay"></iframe>
+                </div>
+
+                <div class="mb-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="srv-tag active" onclick="setStream('vip1', this)">LATINO VIP 1</div>
+                    <div class="srv-tag" onclick="setStream('vip2', this)">LATINO VIP 2</div>
+                    <div class="srv-tag" onclick="setStream('xyz', this)">OPCIÓN XYZ</div>
+                    <div class="srv-tag" onclick="setStream('to', this)">SERVER TO</div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-2">
+                        <h2 id="mTitle" class="text-4xl lg:text-5xl font-black italic uppercase text-rose-600 mb-4"></h2>
+                        <p id="mDesc" class="text-gray-400 text-sm leading-relaxed mb-6"></p>
+                    </div>
+                    <div id="epContainer" class="hidden">
+                        <h3 class="text-xs font-black mb-6 uppercase text-gray-500 tracking-widest italic">Episodios</h3>
+                        <div id="epList" class="space-y-2 max-h-[400px] overflow-y-auto pr-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gridSec" class="p-6 lg:p-10">
+            <h2 id="sectionTitle" class="text-2xl font-black italic mb-10 border-l-4 border-rose-600 pl-4 uppercase">Recomendados</h2>
+            <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8"></div>
+        </section>
+    </main>
+
+    <script>
+        // ÚNICA KEY ACTIVA
+        const ZYLA_API = "13172|RbLTPIj6y6jrZfOyez3LERwmrFcXpozhPaoDMTEy";
+        const IMG = 'https://image.tmdb.org/t/p/w500';
+        let currentItem = { id: null, isTV: false, ep: 1 };
+
+        function detectDevice() {
+            const ua = navigator.userAgent.toLowerCase();
+            if (ua.includes("smart-tv") || ua.includes("googletv")) document.body.className = "device-tv";
+            else if (/android|iphone|ipad/.test(ua)) document.body.className = "device-mobile";
+            else document.body.className = "device-pc";
+            document.getElementById('deviceTxt').innerText = "ZylaLabs Mode Active";
+        }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        async function loadSection(type, btn) {
+            if(btn) {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            if(window.innerWidth < 1024 && document.getElementById('overlay').classList.contains('active')) toggleMenu();
+            
+            // Usamos un catálogo base (puedes conectarlo al MCP de Zylalabs para búsquedas avanzadas)
+            let url = `https://api.themoviedb.org/3/trending/all/week?api_key=2628b2d65ef5a50b08d992e0a7c2de56&language=es-MX`;
+            if(type === 'anime') url = `https://api.themoviedb.org/3/discover/tv?api_key=2628b2d65ef5a50b08d992e0a7c2de56&with_genres=16&with_original_language=ja&language=es-MX`;
+            
+            const res = await fetch(url);
+            const data = await res.json();
+            renderGrid(data.results, type !== 'trending' && type !== 'movie');
+        }
+
+        function renderGrid(items, isTV = false) {
+            const g = document.getElementById('grid');
+            g.innerHTML = '';
+            items.forEach(i => {
+                const div = document.createElement('div');
+                div.className = 'cursor-pointer hover:scale-105 transition duration-500';
+                div.onclick = () => openPlayer(i, isTV || i.media_type === 'tv');
+                div.innerHTML = `<img src="${IMG+i.poster_path}" class="rounded-2xl mb-3 shadow-lg border border-white/5"><h3 class="text-[11px] font-black truncate uppercase px-1">${i.title || i.name}</h3>`;
+                g.appendChild(div);
+            });
+        }
+
+        async function openPlayer(item, isTV) {
+            currentItem = { id: item.id, isTV: isTV, ep: 1 };
+            document.getElementById('gridSec').classList.add('hidden');
+            document.getElementById('playerSec').classList.remove('hidden');
+            document.getElementById('mTitle').innerText = item.title || item.name;
+            document.getElementById('mDesc').innerText = item.overview;
+
+            if(isTV) {
+                document.getElementById('epContainer').classList.remove('hidden');
+                loadEpisodes(item.id);
+            } else {
+                document.getElementById('epContainer').classList.add('hidden');
+                setStream('vip1');
+            }
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        async function loadEpisodes(id) {
+            const res = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/1?api_key=2628b2d65ef5a50b08d992e0a7c2de56&language=es-MX`);
+            const data = await res.json();
+            const el = document.getElementById('epList');
+            el.innerHTML = '';
+            data.episodes.forEach(e => {
+                const card = document.createElement('div');
+                card.className = 'ep-card';
+                card.onclick = () => { currentItem.ep = e.episode_number; setStream('vip1'); };
+                card.innerHTML = `<img src="${IMG+e.still_path}" onerror="this.src='https://via.placeholder.com/90x50/111/fff?text=EP+${e.episode_number}'"><div><p class="font-bold text-[10px] uppercase">Capítulo ${e.episode_number}</p></div>`;
+                el.appendChild(card);
+            });
+            setStream('vip1');
+        }
+
+        // LÓGICA DE STREAMING CON PRIORIDAD LATINO es-LA
+        function setStream(srv, btn) {
+            if(btn) {
+                document.querySelectorAll('.srv-tag').forEach(t => t.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            const { id, isTV, ep } = currentItem;
+            const player = document.getElementById('mainPlayer');
+            
+            if(srv === 'vip1') {
+                player.src = isTV ? `https://vidsrc.me/embed/tv?tmdb=${id}&sea=1&epi=${ep}&lang=es` : `https://vidsrc.me/embed/movie?tmdb=${id}&lang=es`;
+            } else if(srv === 'vip2') {
+                player.src = isTV ? `https://vidsrc.xyz/embed/tv?tmdb=${id}&sea=1&epi=${ep}&lang=es-LA` : `https://vidsrc.xyz/embed/movie?tmdb=${id}&lang=es-LA`;
+            } else if(srv === 'xyz') {
+                player.src = `https://vidsrc.to/embed/${isTV ? 'tv' : 'movie'}/${id}${isTV ? '/1/'+ep : ''}`;
+            } else {
+                player.src = `https://multiembed.mov/?video_id=${id}&tmdb=1`;
+            }
+        }
+
+        function closePlayer() {
+            document.getElementById('playerSec').classList.add('hidden');
+            document.getElementById('gridSec').classList.remove('hidden');
+            document.getElementById('mainPlayer').src = '';
+        }
+
+        detectDevice();
+        loadSection('trending');
+    </script>
+</body>
+</html>
