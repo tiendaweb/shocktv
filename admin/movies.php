@@ -71,12 +71,6 @@ $offset = ($page - 1) * ITEMS_PER_PAGE;
 $total = $db->query('SELECT COUNT(*) FROM movies')->fetchColumn();
 $totalPages = ceil($total / ITEMS_PER_PAGE);
 
-$movies = $db->query("
-    SELECT * FROM movies
-    ORDER BY created_at DESC
-    LIMIT ? OFFSET ?
-")->fetchAll(PDO::FETCH_ASSOC);
-
 // Bind parameters manually for limit/offset
 $stmt = $db->prepare('
     SELECT * FROM movies
