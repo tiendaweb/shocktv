@@ -2,21 +2,16 @@
     RewriteEngine On
     RewriteBase /
 
+    # Permitir archivos reales y directorios
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
     # URLs limpias para admin: /admin/dashboard -> /admin/dashboard.php
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} ^/admin/ [NC]
-    RewriteRule ^admin/(.+)$ admin/$1.php [L,QSA]
+    RewriteRule ^admin/([^/]+)/?$ admin/$1.php [QSA,L]
 
-    # URLs limpias para API: /api/... -> /api/....php
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} ^/api/ [NC]
-    RewriteRule ^api/(.+)$ api/$1.php [L,QSA]
-
-    # Frontend: Permitir archivos reales
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # URLs limpias para API: /api/search -> /api/search.php
+    RewriteRule ^api/([^/]+)/?$ api/$1.php [QSA,L]
 
     # Frontend: Redirigir a index.php
     RewriteRule ^(.*)$ index.php [QSA,L]
