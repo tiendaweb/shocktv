@@ -18,7 +18,7 @@
 </FilesMatch>
 
 # Permitir acceso a archivos específicos
-<FilesMatch "^(index|admin/index|api/|public/)\.php$">
+<FilesMatch "^(index|admin/|api/|public/).*\.php$">
     <IfModule mod_authz_core.c>
         Require all granted
     </IfModule>
